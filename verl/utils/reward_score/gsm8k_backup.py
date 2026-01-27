@@ -63,24 +63,10 @@ def compute_score(solution_str, ground_truth, method="strict", format_score=0.0,
         score: the score for the correct answer
     """
     answer = extract_solution(solution_str=solution_str, method=method)
-    
-    # 初始化要返回的完整字典
-    result = {
-        "score": 0.0,
-        "extracted_answer": answer if answer is not None else "None",
-        "ground_truth": ground_truth,
-        "is_format_correct": answer is not None, # 能提出来就算格式对
-    }
-
     if answer is None:
-        result["score"] = 0.0
-        result["is_correct"] = 0.0
+        return 0
     else:
         if answer == ground_truth:
-            result["score"] = float(score)  # 答对了！
-            result["is_correct"] = 1.0
+            return score
         else:
-            result["score"] = float(format_score) # 答错了但有格式分
-            result["is_correct"] = 0.0
-            
-    return result
+            return format_score

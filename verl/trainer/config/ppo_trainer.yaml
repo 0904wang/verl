@@ -137,8 +137,8 @@ trainer:
   # Experiment name for run identification in tracking tools
   experiment_name: gsm8k
 
-  # Logging backends to use: "console", "wandb", etc.
-  logger: ["console", "wandb"]
+  # Logging backends to use: "console", "wandb", "tensorboard", etc.
+  logger: ["console", "tensorboard"]
 
   # Number of generations to log during validation
   log_val_generations: 0
