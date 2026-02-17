@@ -41,6 +41,12 @@ python examples/data_preprocess/gsm8k_codeagent_agent_loop.py --local_save_dir ~
 bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_codeagent_4x5090.sh
 ```
 
+If you prefer vLLM rollout backend:
+
+```bash
+bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_codeagent_4x5090_vllm.sh
+```
+
 ## OOM / instability fallback order
 
 1. `actor_rollout_ref.rollout.n: 4 -> 2 -> 1`

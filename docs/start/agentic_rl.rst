@@ -121,6 +121,9 @@ For code-agent style projects, you can run the following scripts directly:
     # 3) switch to code_agent
     bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_codeagent_4x5090.sh
 
+    # 4) optional: use vLLM backend for code_agent
+    bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_codeagent_4x5090_vllm.sh
+
 The `code_agent` setup uses:
 
 - `examples/sglang_multiturn/config/codeagent_agent_loop.yaml`
