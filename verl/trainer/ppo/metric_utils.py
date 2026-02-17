@@ -222,6 +222,12 @@ def compute_data_metrics(batch: DataProto, use_critic: bool = True) -> dict[str,
         metrics["tool_call_counts/max"] = tool_call_counts.max()
         metrics["tool_call_counts/mean"] = tool_call_counts.mean()
 
+    if "tool_call_success_rate" in batch.non_tensor_batch:
+        tool_call_success_rate = batch.non_tensor_batch["tool_call_success_rate"]
+        metrics["tool_call_success_rate/min"] = tool_call_success_rate.min()
+        metrics["tool_call_success_rate/max"] = tool_call_success_rate.max()
+        metrics["tool_call_success_rate/mean"] = tool_call_success_rate.mean()
+
     return metrics
 
 

@@ -105,6 +105,34 @@ Note: During training, because the model may sometimes fail to generate correct 
 Follow :doc:`Rollout trace<../advance/rollout_trace>` to known more about trace feature.
 
 
+Code Agent on 4 GPUs
+--------------------
+
+For code-agent style projects, you can run the following scripts directly:
+
+.. code-block:: bash
+
+    # 1) environment/resource precheck
+    bash examples/sglang_multiturn/run_env_precheck_4x5090.sh
+
+    # 2) baseline with tool_agent
+    bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_tool_agent_4x5090.sh
+
+    # 3) switch to code_agent
+    bash examples/sglang_multiturn/run_qwen2.5-3b_gsm8k_codeagent_4x5090.sh
+
+The `code_agent` setup uses:
+
+- `examples/sglang_multiturn/config/codeagent_agent_loop.yaml`
+- `examples/sglang_multiturn/config/tool_config/codeagent_tool_config.yaml`
+
+To prepare a dataset with default `agent_name=code_agent`, run:
+
+.. code-block:: bash
+
+    python examples/data_preprocess/gsm8k_codeagent_agent_loop.py
+
+
 
 Agent Framework
 ---------------

@@ -82,6 +82,8 @@ class AgentData:
         self.response_logprobs: list[float] = []
         self.turn_scores: list[float] = []
         self.tool_rewards: list[float] = []
+        self.tool_call_counts: int = 0
+        self.tool_call_success_counts: int = 0
         self.user_turns = 0
         self.assistant_turns = 0
 
@@ -206,6 +208,13 @@ class ToolAgentLoop(AgentLoopBase):
             extra_fields={},
         )
         output.extra_fields.update({"turn_scores": agent_data.turn_scores, "tool_rewards": agent_data.tool_rewards})
+        output.extra_fields["tool_call_counts"] = agent_data.tool_call_counts
+        output.extra_fields["tool_call_success_counts"] = agent_data.tool_call_success_counts
+        output.extra_fields["tool_call_success_rate"] = (
+            float(agent_data.tool_call_success_counts) / float(agent_data.tool_call_counts)
+            if agent_data.tool_call_counts > 0
+            else 0.0
+        )
         return output
 
     async def _handle_pending_state(self, agent_data: AgentData, sampling_params: dict[str, Any]) -> AgentState:
@@ -293,7 +302,7 @@ class ToolAgentLoop(AgentLoopBase):
 
         # Process tool responses and update multi_modal_data
         # Removed: agent_data.new_images_this_turn = []
-        for tool_response, tool_reward, _ in responses:
+        for tool_response, tool_reward, _, success in responses:
             # Create message from tool response
             if tool_response.image or tool_response.video:
                 # Multi-modal content with structured format
@@ -340,6 +349,9 @@ class ToolAgentLoop(AgentLoopBase):
 
             if tool_reward is not None:
                 agent_data.tool_rewards.append(tool_reward)
+            agent_data.tool_call_counts += 1
+            if success:
+                agent_data.tool_call_success_counts += 1
 
         agent_data.messages.extend(add_messages)
 
@@ -415,7 +427,7 @@ class ToolAgentLoop(AgentLoopBase):
 
     async def _call_tool(
         self, tool_call: FunctionCall, tools_kwargs: dict[str, Any], agent_data: AgentData
-    ) -> tuple[ToolResponse, float, dict]:
+    ) -> tuple[ToolResponse, float, dict, bool]:
         """Call tool and return tool response."""
         tool, instance_id = None, None
         try:
@@ -436,6 +448,7 @@ class ToolAgentLoop(AgentLoopBase):
                 ),
                 0.0,
                 {},
+                False,
             )
         finally:
             if tool and instance_id:
@@ -461,7 +474,7 @@ class ToolAgentLoop(AgentLoopBase):
                 if attr_value is not None:
                     tool_response_kwargs[attr_name] = attr_value
 
-        return ToolResponse(**tool_response_kwargs), tool_reward, res
+        return ToolResponse(**tool_response_kwargs), tool_reward, res, True
 
     def _initialize_interactions(self, interaction_config_file):
         """Initialize interactions from configuration.

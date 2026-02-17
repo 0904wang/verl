@@ -45,6 +45,9 @@ class NaiveRewardManager(AbstractRewardManager):
 
     def __call__(self, data: DataProto, return_dict: bool = False) -> torch.Tensor | dict[str, Any]:
         """We will expand this function gradually based on the available datasets"""
+        # [DEBUG] Check if we are running and what the config is
+        if self.num_examine > 0:
+            print(f"[DEBUG] NaiveRewardManager.__call__ executing. Batch size: {len(data)}. num_examine: {self.num_examine}")
 
         # If there is rm score, we directly return rm score. Otherwise, we compute via rm_score_fn
         reward_from_rm_scores = self._extract_reward_from_rm_scores(data, return_dict)

@@ -1,0 +1,2 @@
+- name: code_agent
+  _target_: verl.experimental.agent_loop.code_agent_loop.CodeAgentLoop
